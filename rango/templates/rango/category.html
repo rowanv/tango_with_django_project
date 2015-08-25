@@ -11,6 +11,7 @@
             <ul>
                 {% for page in pages %}
                 <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+                <li><a href='/rango/category/ {{ category_name }}/add_page'>Add Page</a></li>
                 {% endfor %}
             </ul>
             {% else %}
