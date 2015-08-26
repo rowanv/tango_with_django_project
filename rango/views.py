@@ -1,6 +1,8 @@
 from django.shortcuts import render, render_to_response
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
@@ -35,6 +37,7 @@ def category(request, category_name_url):
 		pass
 	return render(request, 'rango/category.html', context_dict)
 
+@login_required
 def add_category(request):
 	if request.method == 'POST':
 		form = CategoryForm(request.POST)
@@ -49,6 +52,7 @@ def add_category(request):
 
 	return render(request, 'rango/add_category.html', {'form': form})
 
+@login_required
 def add_page(request, category_name_url):
 
     try:
@@ -106,3 +110,34 @@ def register(request):
 		profile_form = UserProfileForm
 	return render_to_response('rango/register.html', {'user_form': user_form,
 		'profile_form': profile_form, 'registered': registered}, context)
+
+def user_login(request):
+	context = RequestContext(request)
+
+	if request.method == 'POST':
+		username = request.POST['username']
+		password = request.POST['password']
+
+		user = authenticate(username=username, password=password)
+
+		if user:
+			if user.is_active:
+				login(request, user)
+				return HttpResponseRedirect('/rango/')
+			else:
+				return HttpResponse('Your rango account is disabled.')
+		else:
+			print('Invalid login details: {0}, {1}'.format(username, password))
+			return HttpResponse('Invalid login details supplied.')
+	else:
+		return render_to_response('rango/login.html', {}, context)
+
+
+@login_required
+def restricted(request):
+	return HttpResponse('Since you are logged in, you can see this text!')
+
+@login_required
+def user_logout(request):
+	logout(request)
+	return HttpResponseRedirect('/rango/')

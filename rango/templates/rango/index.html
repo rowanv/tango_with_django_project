@@ -4,7 +4,11 @@
 
 {% block title %}Rango{% endblock %}
 {% block body_block %}
-        <h1>Rango says..hello world!</h1>
+        {% if user.is_authenticated %}
+            <h1>Rango says... hello {{ user.username }}!</h1>
+        {% else %}
+            <h1>Rango says... hello world!</h1>
+        {% endif %}
 
         {% if categories %}
             <ul>
