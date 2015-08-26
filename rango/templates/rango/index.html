@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Rango</title>
-    </head>
+{% extends 'rango/base.html' %}
 
-    <body>
+
+
+{% block title %}Rango{% endblock %}
+{% block body_block %}
         <h1>Rango says..hello world!</h1>
 
         {% if categories %}
@@ -20,5 +19,4 @@
         <!-- TODO: Add top 5 most viewed categories -->
 
         <a href="/rango/add_category/">Add a New Category</a><br />
-    </body>
-</html>
+{% endblock %}
