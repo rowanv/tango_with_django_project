@@ -1,27 +1,26 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Rango</title>
-    </head>
+{% block body_block %}
+<div class="hero-unit">
+    <h1>Login to Rango</h1>
 
-    <body>
-        <h1>Add a Category</h1>
+    <div class="container">
+    <form class="form-signin span4" id="login_form" method="post" action="/rango/login/">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        {% csrf_token %}
 
-        <form id="category_form" method="post" action="/rango/add_category/">
+        {% if bad_details %}
+        <p><strong>Your username and/or password were incorrect!</strong></p>
+        {% elif disabled_account %}
+        <p><strong>Your Rango account is currently disabled; we can't log you in!</strong></p>
+        {% endif %}
 
-            {% csrf_token %}
-            {% for hidden in form.hidden_fields %}
-                {{ hidden }}
-            {% endfor %}
+        Username: <input type="text" class="input-block-level" placeholder="Username" name="username" value="" size="50" />
+        <br />
+        Password: <input type="password" class="input-block-level" placeholder="Password" name="password" value="" size="50" />
+        <br />
+        <button class="btn btn-primary" type="submit">Sign in</button>
+    </form>
 
-            {% for field in form.visible_fields %}
-                {{ field.errors }}
-                {{ field.help_text }}
-                {{ field }}
-            {% endfor %}
-
-            <input type="submit" name="submit" value="Create Category" />
-        </form>
-    </body>
-
-</html>
+    </div>
+    <!-- /container -->
+</div>
+{% endblock %}
